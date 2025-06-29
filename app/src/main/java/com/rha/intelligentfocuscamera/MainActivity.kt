@@ -2,19 +2,16 @@ package com.rha.intelligentfocuscamera
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.MediaStore.Audio.Media
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.registerForActivityResult
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraProvider
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
@@ -120,6 +117,7 @@ class MainActivity : AppCompatActivity() {
         imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback  {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 Toast.makeText(baseContext, "Image saved to ${outputFileResults.savedUri}", Toast.LENGTH_SHORT).show()
+                openPreviewWindow(outputFileResults.savedUri.toString())
             }
 
             override fun onError(exception: ImageCaptureException) {
@@ -132,5 +130,11 @@ class MainActivity : AppCompatActivity() {
         return REQUIRED_PERMISSIONS.all {
             ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
         }
+    }
+
+    private fun openPreviewWindow(uri: String) {
+        val intent = Intent(baseContext, PreviewWindow::class.java)
+        intent.putExtra("captured_image_uri", uri)
+        startActivity(intent)
     }
 }

@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.volley)
+    implementation(libs.play.services.cronet)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
